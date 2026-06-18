@@ -1,0 +1,127 @@
+{
+  "/": {
+    "folders": [
+      "2026-06"
+    ],
+    "images": [],
+    "metadata": null
+  },
+  "/2026-06": {
+    "folders": [
+      "01"
+    ],
+    "images": [],
+    "metadata": null
+  },
+  "/2026-06/01": {
+    "folders": [
+      "background",
+      "other_sona_pics",
+      "poses",
+      "ref_sheets"
+    ],
+    "images": [],
+    "metadata": {
+      "Commissioner": "@kezzbi",
+      "Artist": "@hoodiedogs.art",
+      "Other_Sonas": "@sloosh.bsky.social",
+      "Description": "Tight cropped shot of Kezz and Slush relaxing after a track day, leaning back on their respective vehicles. Both still wearing their grey tracksuits, helmet under one arm, talking, laughing e.g."
+    }
+  },
+  "/2026-06/01/background": {
+    "folders": [],
+    "images": [
+      "car1.JPG",
+      "car2.jpg",
+      "Car3.jpg",
+      "helmet.jpg",
+      "motorcycle1.jpg",
+      "motorcycle2.jpg",
+      "motorcycle3.jpg",
+      "tracksuit.jpg"
+    ],
+    "metadata": {
+      "files": {
+        "car1.JPG": {
+          "Description": "Alabaster silver FA5 Honda Civic, 2011 model"
+        },
+        "car2.jpg": {
+          "Description": "Alabaster silver FA5 Honda Civic, 2011 model Side Profile with a little spoiler"
+        },
+        "Car3.jpg": {
+          "Description": "Alabaster silver FA5 Honda Civic, 2011 model close up from the front"
+        },
+        "motorcycle1.jpg": {
+          "Description": "Blue Suzuki GSX 8R product shot on a side stand straight up"
+        },
+        "motorcycle2.jpg": {
+          "Description": "Blue Suzuki GSX 8R with a rider on a track day"
+        },
+        "motorcycle3.jpg": {
+          "Description": "Blue Suzuki GSX 8R side profile"
+        },
+        "tracksuit.jpg": {
+          "Description": "Grey Sparco tracksuit, which both characters should be wearing."
+        },
+        "helmet.jpg": {
+          "Description": "Grey Arai helmet which both characters should have under one of their arms."
+        }
+      },
+      "Folder Description": "Background objects and assets to appear in commissioned artwork scene"
+    }
+  },
+  "/2026-06/01/other_sona_pics": {
+    "folders": [],
+    "images": [
+      "Kezz2.JPG",
+      "Kezz3.jpg",
+      "Slush2.jpeg"
+    ],
+    "metadata": {
+      "files": {
+        "Kezz2.JPG": {
+          "Description": "@Kezzbi's badge, here you can see a closer view of her usual hairstyle and clothes. Feminine features, e.g. bust /hips are larger than they appear."
+        },
+        "Kezz3.jpg": {
+          "Description": "A comic featuring @kezzbi as a background character"
+        },
+        "Slush2.jpeg": {
+          "Description": "@Sloosh's fursona Slush, please note the Shiba Inu eyebrows they're fluffy UwU."
+        }
+      },
+      "Folder Description": "Other pictures of the commissioner's fursonas in different contexts like badges e.g."
+    }
+  },
+  "/2026-06/01/poses": {
+    "folders": [],
+    "images": [
+      "comission_idea.JPG"
+    ],
+    "metadata": {
+      "files": {
+        "comission_idea.JPG": {
+          "Description": "General poses, blocking e.g. for this commission. The characters are both wearing grey tracksuits, there are no requirements specifying detail, feel free to block mechanically complex shapes in to less complex ones. Feel free to reorient objects and change perspective as needed. There are no hard and fast requirements, this is just intended to give you an idea of what I thought would look good."
+        }
+      },
+      "Folder Description": "The overall idea of the commission, expressed crudely meant to just provide a vague suggestion as to the layout of the final product."
+    }
+  },
+  "/2026-06/01/ref_sheets": {
+    "folders": [],
+    "images": [
+      "Kezz1.jpg",
+      "Slush1.jpg"
+    ],
+    "metadata": {
+      "files": {
+        "Kezz1.jpg": {
+          "Description": "@kezzbi's ref sheet, aka Veleaux"
+        },
+        "Slush1.jpg": {
+          "Description": "@sloosh's ref sheet, please look at the image of her badge to see the thick shiba-inu style eyebrows she should have."
+        }
+      },
+      "Folder Description": "This is a ref sheet, you know what that is. Flat colors UwU."
+    }
+  }
+}

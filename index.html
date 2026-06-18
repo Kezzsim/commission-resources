@@ -7,6 +7,9 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#1e5fb4">
+  <!-- Base href: change to /repo-name/ for GitHub Pages project sites,
+       or leave as / for custom domains and user/org pages. -->
+  <base href="/">
   <title>Kezzbi's Commission Resources</title>
   <style>
     /* =====================================================
@@ -1392,11 +1395,41 @@ function folderSVGSmall() {
 /* ============================================================
    API
    ============================================================ */
+/* ============================================================
+   MANIFEST (replaces server API for static deployment)
+   ============================================================ */
+let _manifest = null;
+
+async function loadManifest() {
+  if (_manifest) return _manifest;
+  // 'manifest.json' is a relative URL — resolved via <base href>, so it always
+  // points to the repo root regardless of what pushState has set the path to.
+  const r = await fetch('manifest.json');
+  if (!r.ok) throw new Error('Could not load manifest.json — run `npm run build` first.');
+  _manifest = await r.json();
+  return _manifest;
+}
+
 async function fetchDir(path) {
-  const url = `/api/list?path=${encodeURIComponent(path)}`;
-  const r = await fetch(url);
-  if (!r.ok) throw new Error('Failed to load ' + path);
-  return r.json();
+  const manifest = await loadManifest();
+  path = normalizePath(path);
+  const entry = manifest[path];
+  if (!entry) throw new Error('Path not found in manifest: ' + path);
+  return entry;
+}
+
+/* ============================================================
+   BASE PATH
+   Derived from the <base href> tag. Allows the app to work correctly
+   whether deployed at / (custom domain) or /repo/ (GitHub Pages project).
+   ============================================================ */
+function getBasePath() {
+  // e.g. <base href="/comissionsite/"> → '/comissionsite'
+  //      <base href="/">              → ''
+  const base = document.querySelector('base');
+  if (!base) return '';
+  const p = new URL(base.href).pathname;
+  return p.endsWith('/') ? p.slice(0, -1) : p;
 }
 
 /* ============================================================
@@ -1417,8 +1450,9 @@ async function navigate(path, addHistory = true) {
         S.history.push(path);
         S.histIdx = S.history.length - 1;
       }
-      // Keep the browser URL in sync so the path is bookmarkable / shareable
-      window.history.pushState({ path }, '', path);
+      // Keep the browser URL in sync so the path is bookmarkable / shareable.
+      // Prepend the base path so the URL is correct for both root and subdir deployments.
+      window.history.pushState({ path }, '', getBasePath() + path);
     }
 
     renderAll();
@@ -1601,7 +1635,7 @@ function renderContent() {
     const igrid = el('div', { id: 'images-grid', class: listMode ? 'list-mode' : '' });
     for (let i = 0; i < images.length; i++) {
       const fname = images[i];
-      const imgPath = (S.path === '/' ? '' : S.path) + '/' + encodeURIComponent(fname);
+      const imgPath = (S.path === '/' ? '' : S.path.slice(1)) + '/' + encodeURIComponent(fname);
 
       const wrap = el('div', {
         class: 'img-thumb-wrap',
@@ -1827,7 +1861,7 @@ function lbSetImage(idx) {
   S.lb.idx = idx;
 
   const fname = images[idx];
-  const src = (basePath === '/' ? '' : basePath) + '/' + encodeURIComponent(fname);
+  const src = (basePath === '/' ? '' : basePath.slice(1)) + '/' + encodeURIComponent(fname);
 
   const imgEl = qs('#lb-image');
   const loading = qs('#lb-loading');
@@ -1884,7 +1918,7 @@ function applyDescVisible() {
 
 function lbDownload() {
   const fname = S.lb.images[S.lb.idx];
-  const src = (S.lb.basePath === '/' ? '' : S.lb.basePath) + '/' + encodeURIComponent(fname);
+  const src = (S.lb.basePath === '/' ? '' : S.lb.basePath.slice(1)) + '/' + encodeURIComponent(fname);
   const a = document.createElement('a');
   a.href = src;
   a.download = fname;
@@ -2227,16 +2261,31 @@ async function init() {
 
   // Handle browser back/forward — navigate without re-pushing to history
   window.addEventListener('popstate', (e) => {
-    const path = (e.state && e.state.path) || window.location.pathname;
+    // e.state.path is the logical path (without base prefix)
+    const path = (e.state && e.state.path) || logicalPath();
     navigate(path, false);
   });
 
   await initTree();
 
-  // Boot to whatever path the browser is currently at (supports direct deep links)
-  const initialPath = normalizePath(window.location.pathname);
-  window.history.replaceState({ path: initialPath }, '', initialPath);
-  await navigate(initialPath, false);
+  // GitHub Pages 404 redirect shim: 404.html encodes the path as /?/some/path
+  // Restore it to the real URL before booting.
+  if (window.location.search.startsWith('?/')) {
+    const restored = window.location.search.slice(1).split('&')[0]; // e.g. '/2026-06/01'
+    window.history.replaceState(null, '', getBasePath() + restored);
+  }
+
+  // Boot to the logical path derived from the current URL
+  const initial = normalizePath(logicalPath());
+  window.history.replaceState({ path: initial }, '', getBasePath() + initial);
+  await navigate(initial, false);
+}
+
+// Extract the SPA-logical path from window.location by stripping the base prefix.
+function logicalPath() {
+  const base = getBasePath(); // e.g. '/comissionsite' or ''
+  const full = window.location.pathname;
+  return full.startsWith(base) ? normalizePath(full.slice(base.length)) : '/';
 }
 
 init().catch(console.error);

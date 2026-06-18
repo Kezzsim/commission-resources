@@ -4,10 +4,10 @@
   "description": "Kezzbi's Commission Resources - XP Explorer SPA",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
+    "build": "node build.js",
+    "start": "node server.js"
   },
-  "dependencies": {
+  "devDependencies": {
     "express": "^4.18.2"
   }
 }

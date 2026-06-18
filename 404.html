@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Kezzbi's Commission Resources</title>
+  <script>
+    // GitHub Pages SPA redirect shim
+    // ─────────────────────────────────────────────────────────────────────────
+    // GitHub Pages returns this 404.html for any path that isn't a real file.
+    // We encode the intended path into the query string and redirect back to
+    // index.html, which then restores the URL via history.replaceState.
+    //
+    // pathSegmentsToKeep controls how many leading path segments are part of
+    // the site root (i.e. the base) rather than the SPA route:
+    //
+    //   0  →  user/org site  (username.github.io)         base = /
+    //   1  →  project site   (username.github.io/repo)    base = /repo/
+    //
+    // For a custom domain that resolves to the root, use 0.
+    // ─────────────────────────────────────────────────────────────────────────
+    var pathSegmentsToKeep = 1;
+
+    var l = window.location;
+    l.replace(
+      l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+      l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
+      l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+      (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+      l.hash
+    );
+  </script>
+</head>
+<body></body>
+</html>
