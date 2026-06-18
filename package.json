@@ -1,0 +1,13 @@
+{
+  "name": "kezzbi-commission-resources",
+  "version": "1.0.0",
+  "description": "Kezzbi's Commission Resources - XP Explorer SPA",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

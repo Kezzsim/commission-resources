@@ -1,0 +1,2240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#1e5fb4">
+  <title>Kezzbi's Commission Resources</title>
+  <style>
+    /* =====================================================
+       BASE RESET + ROOT VARIABLES
+       ===================================================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --xp-blue-deep:    #0a246a;
+      --xp-blue-dark:    #1853a3;
+      --xp-blue-mid:     #2168c7;
+      --xp-blue-light:   #4b8dd6;
+      --xp-blue-lighter: #a6caf0;
+      --xp-tan:          #ece9d8;
+      --xp-toolbar:      #dedad0;
+      --xp-border-out:   #0055ea;
+      --xp-border-in:    #7aa7dc;
+      --xp-selected:     #316ac5;
+      --xp-sel-bg:       rgba(49,106,197,0.18);
+      --xp-folder:       #f9c634;
+      --xp-folder-tab:   #e6a800;
+      --xp-folder-dark:  #c88c00;
+      --glow-blue:       0 0 10px rgba(60,130,255,0.6);
+      --glow-gold:       0 0 10px rgba(255,170,0,0.5);
+      --sidebar-w:       220px;
+      --titlebar-h:      30px;
+      --menubar-h:       22px;
+      --toolbar-h:       42px;
+      --addrbar-h:       30px;
+      --statusbar-h:     22px;
+      --safe-top:        env(safe-area-inset-top, 0px);
+      --safe-bottom:     env(safe-area-inset-bottom, 0px);
+      --safe-left:       env(safe-area-inset-left, 0px);
+      --safe-right:      env(safe-area-inset-right, 0px);
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: #244eab;
+      font-family: Tahoma, 'Segoe UI', Arial, sans-serif;
+      font-size: 11px;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+    }
+
+    /* =====================================================
+       APP WINDOW FRAME
+       ===================================================== */
+    #app {
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+      padding-top: var(--safe-top);
+      padding-left: var(--safe-left);
+      padding-right: var(--safe-right);
+      background: var(--xp-tan);
+      border: 3px solid var(--xp-blue-mid);
+      border-top: 3px solid var(--xp-blue-lighter);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.4),
+        0 4px 24px rgba(0,0,40,0.7),
+        0 0 0 1px var(--xp-blue-deep);
+      overflow: hidden;
+    }
+
+    /* =====================================================
+       TITLE BAR — XP Luna Blue + 2007 Bling Gloss
+       ===================================================== */
+    #titlebar {
+      height: var(--titlebar-h);
+      min-height: var(--titlebar-h);
+      display: flex;
+      align-items: center;
+      padding: 0 4px 0 6px;
+      position: relative;
+      overflow: hidden;
+      user-select: none;
+      flex-shrink: 0;
+      /* Luna Blue gradient */
+      background:
+        linear-gradient(to right,
+          rgba(0,0,0,0.25) 0%, rgba(0,0,0,0) 15%,
+          rgba(255,255,255,0) 70%, rgba(255,255,255,0.1) 100%),
+        linear-gradient(180deg,
+          #1e6abf 0%, #1c62b4 20%,
+          #2270cb 50%, #1c62b4 80%,
+          #1853a3 100%);
+    }
+
+    /* 2007 bling gloss overlay */
+    #titlebar::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg,
+        rgba(255,255,255,0.38) 0%,
+        rgba(255,255,255,0.12) 48%,
+        rgba(255,255,255,0)    49%,
+        rgba(255,255,255,0.04) 100%);
+      pointer-events: none;
+    }
+
+    /* Animated shimmer sweep on titlebar */
+    @keyframes shimmerSweep {
+      0%   { transform: translateX(-200%); }
+      100% { transform: translateX(400%); }
+    }
+    #titlebar::before {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 30%;
+      background: linear-gradient(90deg,
+        transparent, rgba(255,255,255,0.15), transparent);
+      animation: shimmerSweep 6s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    #titlebar-icon {
+      width: 18px; height: 18px;
+      margin-right: 5px;
+      flex-shrink: 0;
+      position: relative; z-index: 1;
+    }
+
+    #titlebar-title {
+      flex: 1;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px rgba(0,0,50,0.7);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      position: relative; z-index: 1;
+    }
+
+    #titlebar-controls {
+      display: flex;
+      gap: 2px;
+      position: relative; z-index: 1;
+    }
+
+    .ctrl-btn {
+      width: 21px; height: 21px;
+      border-radius: 3px;
+      border: 1px solid rgba(0,0,0,0.4);
+      cursor: pointer;
+      font-size: 9px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+      transition: filter 0.1s;
+      position: relative;
+      overflow: hidden;
+    }
+    .ctrl-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.3), rgba(255,255,255,0) 50%);
+      pointer-events: none;
+    }
+    .ctrl-btn:active { filter: brightness(0.8); }
+
+    .ctrl-min, .ctrl-max {
+      background: linear-gradient(180deg, #4b8dd6, #2168c7 50%, #1853a3);
+    }
+    .ctrl-close {
+      background: linear-gradient(180deg, #e05050, #c02020 50%, #900000);
+    }
+    .ctrl-min:hover { background: linear-gradient(180deg, #6aadff, #3380dd 50%, #1e5fb4); }
+    .ctrl-max:hover { background: linear-gradient(180deg, #6aadff, #3380dd 50%, #1e5fb4); }
+    .ctrl-close:hover { background: linear-gradient(180deg, #ff7070, #e03030 50%, #b00000); }
+
+    /* =====================================================
+       MENU BAR
+       ===================================================== */
+    #menubar {
+      height: var(--menubar-h);
+      min-height: var(--menubar-h);
+      display: flex;
+      align-items: stretch;
+      background: var(--xp-tan);
+      border-bottom: 1px solid #b0a898;
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    .menu-item {
+      padding: 0 8px;
+      display: flex;
+      align-items: center;
+      font-size: 11px;
+      cursor: default;
+      position: relative;
+    }
+    .menu-item:hover {
+      background: var(--xp-sel-bg);
+      outline: 1px solid var(--xp-border-in);
+    }
+    .menu-item[data-active="true"] {
+      background: linear-gradient(180deg, #e8f0ff, #c8dcff);
+      outline: 1px solid var(--xp-blue-mid);
+    }
+
+    /* View dropdown */
+    .menu-dropdown {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: white;
+      border: 1px solid #9090a0;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+      z-index: 200;
+      min-width: 140px;
+      padding: 2px 0;
+    }
+    .menu-item[data-active="true"] .menu-dropdown { display: block; }
+
+    .dropdown-item {
+      padding: 4px 28px 4px 24px;
+      cursor: default;
+      font-size: 11px;
+      position: relative;
+    }
+    .dropdown-item:hover { background: var(--xp-sel-bg); }
+    .dropdown-item.checked::before {
+      content: '✓';
+      position: absolute;
+      left: 8px;
+      color: var(--xp-blue-mid);
+    }
+    .dropdown-sep {
+      height: 1px;
+      background: #d0d0d0;
+      margin: 2px 0;
+    }
+
+    /* =====================================================
+       TOOLBAR
+       ===================================================== */
+    #toolbar {
+      height: var(--toolbar-h);
+      min-height: var(--toolbar-h);
+      display: flex;
+      align-items: center;
+      padding: 3px 6px;
+      gap: 3px;
+      background: linear-gradient(180deg, #f4f2ee 0%, var(--xp-toolbar) 100%);
+      border-bottom: 1px solid #b0a898;
+      flex-shrink: 0;
+    }
+
+    .tb-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1px;
+      min-width: 48px;
+      height: 34px;
+      padding: 2px 6px;
+      border: 1px solid transparent;
+      border-radius: 3px;
+      background: transparent;
+      cursor: pointer;
+      font-family: Tahoma, sans-serif;
+      font-size: 10px;
+      color: #111;
+      transition: background 0.1s, border-color 0.1s, box-shadow 0.1s;
+      position: relative;
+      white-space: nowrap;
+    }
+    .tb-btn svg { width: 22px; height: 22px; }
+    .tb-btn:hover:not(:disabled) {
+      background: linear-gradient(180deg, #fff8e8 0%, #ffe8c0 60%, #ffd88a 100%);
+      border-color: #c8860a;
+      box-shadow: var(--glow-gold), inset 0 1px 0 rgba(255,255,255,0.7);
+    }
+    .tb-btn:active:not(:disabled) {
+      background: linear-gradient(180deg, #ffd88a 0%, #ffcc60 100%);
+      border-color: #a86800;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .tb-btn:disabled { opacity: 0.4; cursor: default; }
+
+    .tb-sep {
+      width: 1px;
+      height: 28px;
+      background: linear-gradient(180deg, transparent, #a0988a, transparent);
+      margin: 0 2px;
+    }
+
+    /* Mobile sidebar toggle - only shown on mobile */
+    #btn-sidebar-toggle { display: none; }
+
+    /* View mode buttons */
+    #view-btns {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 1px;
+      border: 1px solid #a09888;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .view-btn {
+      width: 28px; height: 24px;
+      border: none;
+      background: linear-gradient(180deg, #f0eeea, #dedad0);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      border-right: 1px solid #b0a898;
+      transition: background 0.1s;
+    }
+    .view-btn:last-child { border-right: none; }
+    .view-btn:hover { background: linear-gradient(180deg, #fff8e8, #ffe8c0); }
+    .view-btn.active {
+      background: linear-gradient(180deg, #c8dcff, #a8c0f8);
+      border-color: var(--xp-blue-mid);
+    }
+
+    /* =====================================================
+       ADDRESS BAR
+       ===================================================== */
+    #addrbar {
+      height: var(--addrbar-h);
+      min-height: var(--addrbar-h);
+      display: flex;
+      align-items: center;
+      padding: 2px 6px;
+      gap: 4px;
+      background: var(--xp-toolbar);
+      border-bottom: 2px solid #9098a8;
+      flex-shrink: 0;
+    }
+
+    #addrbar-label {
+      font-size: 11px;
+      color: #333;
+      white-space: nowrap;
+    }
+
+    #addrbar-input-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      height: 22px;
+      background: white;
+      border: 1px solid #7088a8;
+      border-radius: 2px;
+      padding: 0 6px;
+      gap: 4px;
+      overflow: hidden;
+      box-shadow: inset 1px 1px 2px rgba(0,0,50,0.15);
+    }
+    #addrbar-path {
+      flex: 1;
+      font-size: 11px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #000;
+      cursor: text;
+      direction: rtl;
+      text-align: left;
+    }
+    #addrbar-path span { direction: ltr; unicode-bidi: embed; }
+
+    #addrbar-go {
+      height: 22px;
+      padding: 0 10px;
+      background: linear-gradient(180deg, #f0eeea, #dedad0);
+      border: 1px solid #9098a8;
+      border-radius: 2px;
+      font-size: 11px;
+      font-family: Tahoma, sans-serif;
+      cursor: pointer;
+    }
+    #addrbar-go:hover {
+      background: linear-gradient(180deg, #fff8e8, #ffe8c0);
+      border-color: #c8860a;
+    }
+
+    /* =====================================================
+       MAIN AREA — SIDEBAR + CONTENT
+       ===================================================== */
+    #main {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    /* ---- SIDEBAR / FOLDER TREE ---- */
+    #sidebar {
+      width: var(--sidebar-w);
+      min-width: var(--sidebar-w);
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      background: white;
+      border-right: 1px solid #b0b8c8;
+      overflow: hidden;
+    }
+
+    #sidebar-header {
+      background: linear-gradient(180deg, #d8e8ff, #b8ccee);
+      border-bottom: 1px solid #9098b8;
+      padding: 4px 10px;
+      font-weight: bold;
+      font-size: 11px;
+      color: #1a3a70;
+      flex-shrink: 0;
+    }
+
+    #folder-tree {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 4px 0;
+    }
+
+    .tree-node {
+      user-select: none;
+    }
+    .tree-row {
+      display: flex;
+      align-items: center;
+      height: 22px;
+      padding-right: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      position: relative;
+    }
+    .tree-row:hover { background: var(--xp-sel-bg); }
+    .tree-row.active {
+      background: var(--xp-selected);
+      color: white;
+    }
+    .tree-row.active .tree-label { color: white; }
+
+    .tree-toggle {
+      width: 18px;
+      min-width: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      color: #666;
+      flex-shrink: 0;
+    }
+    .tree-toggle:hover { color: #000; }
+    .tree-icon {
+      width: 16px; height: 16px;
+      margin-right: 4px;
+      flex-shrink: 0;
+    }
+    .tree-label {
+      font-size: 11px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #111;
+    }
+
+    .tree-children { display: none; }
+    .tree-children.open { display: block; }
+
+    /* ---- CONTENT PANE ---- */
+    #content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background: white;
+      padding: 8px;
+      min-width: 0;
+    }
+
+    /* Loading / error */
+    #content-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 12px;
+      color: #666;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid #ddd;
+      border-top-color: var(--xp-blue-mid);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    /* =====================================================
+       FOLDER GRID — LARGE ICONS VIEW
+       ===================================================== */
+    #folders-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 2px;
+      margin-bottom: 8px;
+    }
+
+    .folder-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 6px 4px 4px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      transition: background 0.12s, border-color 0.12s, box-shadow 0.12s;
+    }
+    .folder-item:hover {
+      background: var(--xp-sel-bg);
+      border-color: rgba(49,106,197,0.4);
+      box-shadow: var(--glow-blue);
+    }
+    .folder-item:active, .folder-item.selected {
+      background: rgba(49,106,197,0.28);
+      border-color: var(--xp-selected);
+    }
+
+    .folder-icon-wrap {
+      position: relative;
+      width: 48px;
+      height: 42px;
+    }
+    /* Bling reflection under folder */
+    .folder-icon-wrap::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 4px;
+      right: 4px;
+      height: 8px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(249,198,52,0.35), transparent 70%);
+      pointer-events: none;
+    }
+
+    .folder-name {
+      font-size: 11px;
+      text-align: center;
+      word-break: break-word;
+      line-height: 1.3;
+      max-width: 76px;
+      margin-top: 4px;
+      color: #111;
+    }
+
+    /* =====================================================
+       IMAGE GALLERY GRID
+       ===================================================== */
+    #images-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 8px;
+    }
+
+    .img-thumb-wrap {
+      position: relative;
+      aspect-ratio: 1;
+      border-radius: 4px;
+      overflow: hidden;
+      cursor: pointer;
+      /* 2007 bling glass frame */
+      border: 2px solid rgba(255,255,255,0.7);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.25), 0 0 0 1px rgba(100,150,255,0.2);
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+      background: #e8e8e8;
+    }
+    .img-thumb-wrap::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg,
+        rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 60%);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .img-thumb-wrap:hover {
+      transform: scale(1.04);
+      border-color: rgba(100,170,255,0.95);
+      box-shadow:
+        0 0 14px rgba(50,120,255,0.6),
+        0 4px 14px rgba(0,0,0,0.35),
+        0 0 0 1px rgba(100,170,255,0.6);
+      z-index: 2;
+    }
+    .img-thumb-wrap:active { transform: scale(0.98); }
+
+    .img-thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      loading: lazy;
+    }
+
+    /* =====================================================
+       STATUS BAR
+       ===================================================== */
+    #statusbar {
+      height: var(--statusbar-h);
+      min-height: var(--statusbar-h);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      padding-bottom: var(--safe-bottom);
+      background: linear-gradient(180deg, #e8e4dc, var(--xp-tan));
+      border-top: 1px solid #b0a898;
+      gap: 8px;
+      overflow: hidden;
+    }
+    .status-panel {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding: 0 6px;
+      font-size: 11px;
+      color: #333;
+      border-right: 1px solid #c8c0b0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .status-panel:last-child { border-right: none; flex: 1; overflow: hidden; }
+
+    /* =====================================================
+       METADATA INFO PANEL (below content, inside main)
+       ===================================================== */
+    #meta-panel {
+      background: linear-gradient(180deg, #f0edff, #e4e0f8);
+      border-top: 1px solid #b0a8cc;
+      padding: 8px 12px;
+      font-size: 11px;
+      display: none;
+      flex-shrink: 0;
+    }
+    #meta-panel.visible { display: block; }
+
+    .meta-title {
+      font-weight: bold;
+      color: var(--xp-blue-deep);
+      margin-bottom: 4px;
+      font-size: 12px;
+    }
+    .meta-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 2px 8px;
+    }
+    .meta-key {
+      font-weight: bold;
+      color: #444;
+      white-space: nowrap;
+    }
+    .meta-val { color: #111; }
+    .meta-desc {
+      margin-top: 6px;
+      color: #222;
+      line-height: 1.5;
+      font-style: italic;
+    }
+
+    /* =====================================================
+       LIGHTBOX / SHADOWBOX
+       ===================================================== */
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    #lightbox.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    #lb-bg {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,10,0.93);
+      /* 2007 bling: subtle vignette */
+      background: radial-gradient(ellipse at center,
+        rgba(0,0,20,0.85) 0%, rgba(0,0,5,0.97) 100%);
+    }
+
+    #lb-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      padding-top: var(--safe-top);
+      padding-bottom: var(--safe-bottom);
+    }
+
+    /* Lightbox top bar */
+    #lb-topbar {
+      flex-shrink: 0;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      gap: 10px;
+      background: linear-gradient(180deg,
+        rgba(0,20,80,0.85), rgba(0,10,40,0.65));
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(100,160,255,0.25);
+    }
+
+    #lb-close {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,80,80,0.5);
+      background: radial-gradient(circle at 50% 35%,
+        rgba(255,80,80,0.7), rgba(180,0,0,0.8));
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.1s, box-shadow 0.1s;
+      box-shadow: 0 0 8px rgba(255,0,0,0.3);
+    }
+    #lb-close:hover {
+      background: radial-gradient(circle at 50% 35%,
+        rgba(255,120,120,0.9), rgba(220,0,0,0.9));
+      box-shadow: 0 0 12px rgba(255,0,0,0.6);
+    }
+
+    #lb-filename {
+      flex: 1;
+      color: rgba(255,255,255,0.8);
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    #lb-counter {
+      color: rgba(255,255,255,0.6);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .lb-action-btn {
+      width: 32px; height: 32px;
+      border-radius: 6px;
+      border: 1px solid rgba(100,160,255,0.35);
+      background: rgba(20,60,180,0.5);
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.1s, box-shadow 0.1s;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+    .lb-action-btn:hover {
+      background: rgba(40,100,255,0.7);
+      box-shadow: 0 0 10px rgba(60,140,255,0.5);
+      border-color: rgba(140,200,255,0.6);
+    }
+
+    /* Lightbox main image area */
+    #lb-image-area {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    #lb-image-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    #lb-image {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+      transform-origin: center center;
+      transition: none;
+      user-select: none;
+      -webkit-user-drag: none;
+      pointer-events: none;
+    }
+    #lb-image.animating {
+      transition: transform 0.25s ease-out;
+    }
+
+    /* Nav arrows */
+    .lb-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      width: 44px; height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,20,80,0.5);
+      border: 1px solid rgba(100,160,255,0.3);
+      border-radius: 4px;
+      color: rgba(255,255,255,0.85);
+      font-size: 28px;
+      cursor: pointer;
+      transition: background 0.1s, box-shadow 0.1s, opacity 0.15s;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+    .lb-nav:hover {
+      background: rgba(20,60,200,0.7);
+      box-shadow: var(--glow-blue);
+    }
+    .lb-nav:disabled { opacity: 0.2; cursor: default; }
+    #lb-prev { left: 8px; }
+    #lb-next { right: 8px; }
+
+    /* Loading indicator in lightbox */
+    #lb-loading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    /* Lightbox description bar */
+    #lb-descbar {
+      flex-shrink: 0;
+      background: linear-gradient(to top,
+        rgba(0,10,30,0.92), rgba(0,10,30,0.72));
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(100,160,255,0.2);
+      padding: 10px 16px;
+      padding-bottom: max(10px, var(--safe-bottom));
+      transition: transform 0.25s, opacity 0.25s;
+      transform: translateY(0);
+    }
+    #lb-descbar.hidden {
+      transform: translateY(100%);
+      opacity: 0;
+      pointer-events: none;
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+    }
+
+    #lb-desc-text {
+      color: rgba(255,255,255,0.9);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    #lb-desc-text:empty::before {
+      content: 'No description available.';
+      color: rgba(255,255,255,0.35);
+      font-style: italic;
+    }
+
+    /* =====================================================
+       SIDEBAR MOBILE OVERLAY
+       ===================================================== */
+    #sidebar-mask {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+    }
+
+    /* =====================================================
+       CUSTOM SCROLLBAR (WebKit)
+       ===================================================== */
+    ::-webkit-scrollbar { width: 14px; height: 14px; }
+    ::-webkit-scrollbar-track {
+      background: linear-gradient(180deg, #e8e4dc, #dedad0);
+      border-left: 1px solid #c0b8a8;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #b8d0f0, #7aace0, #4888d0);
+      border: 2px solid #d8e8ff;
+      border-radius: 6px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, #cce0ff, #88bce8, #3370c0);
+    }
+    ::-webkit-scrollbar-button {
+      background: linear-gradient(180deg, #d0e0f8, #a8c4e8);
+      border: 1px solid #8098c0;
+      display: block;
+      height: 14px;
+    }
+
+    /* =====================================================
+       SPARKLE ANIMATION (2007 bling ✨)
+       ===================================================== */
+    @keyframes sparkle {
+      0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+      50%       { opacity: 1; transform: scale(1) rotate(180deg); }
+    }
+    .sparkle {
+      position: absolute;
+      pointer-events: none;
+      z-index: 999;
+    }
+    .sparkle::before, .sparkle::after {
+      content: '✦';
+      position: absolute;
+      color: rgba(255,220,80,0.9);
+      font-size: 12px;
+      animation: sparkle 1.5s ease-in-out infinite;
+    }
+    .sparkle::after {
+      animation-delay: 0.75s;
+      color: rgba(180,220,255,0.9);
+      font-size: 8px;
+      top: 8px; left: 8px;
+    }
+
+    /* =====================================================
+       FOLDER SECTION LABEL
+       ===================================================== */
+    .section-label {
+      font-size: 11px;
+      font-weight: bold;
+      color: var(--xp-blue-mid);
+      border-bottom: 1px solid var(--xp-blue-lighter);
+      margin-bottom: 6px;
+      padding-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* =====================================================
+       EMPTY STATE
+       ===================================================== */
+    .empty-state {
+      color: #888;
+      font-size: 12px;
+      padding: 16px 8px;
+      text-align: center;
+    }
+
+    /* =====================================================
+       BREADCRUMBS (mobile-friendly nav)
+       ===================================================== */
+    #breadcrumb-row {
+      display: none; /* hidden on desktop - address bar is used */
+    }
+
+    /* =====================================================
+       MOBILE RESPONSIVE
+       ===================================================== */
+    @media (max-width: 680px) {
+      :root {
+        --sidebar-w: 100%;
+        --toolbar-h: 48px;
+      }
+
+      #sidebar {
+        position: fixed;
+        top: 0; left: 0; bottom: 0;
+        width: 80vw;
+        max-width: 280px;
+        z-index: 150;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        box-shadow: 4px 0 20px rgba(0,0,0,0.4);
+      }
+      #sidebar.open {
+        transform: translateX(0);
+      }
+      #sidebar-mask { display: block; }
+      #sidebar-mask.visible { display: block; pointer-events: all; }
+      #sidebar-mask:not(.visible) { display: none; }
+
+      #btn-sidebar-toggle { display: flex !important; }
+
+      #addrbar-label { display: none; }
+      #addrbar-go { display: none; }
+
+      #menubar { display: none; }
+
+      .tb-btn .tb-label { display: none; }
+      .tb-btn { min-width: 38px; }
+
+      #images-grid {
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+        gap: 6px;
+      }
+      #folders-grid {
+        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+      }
+
+      .lb-nav {
+        width: 36px; height: 56px;
+        font-size: 22px;
+      }
+      #lb-prev { left: 2px; }
+      #lb-next { right: 2px; }
+    }
+
+    @media (max-width: 400px) {
+      #images-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 4px;
+      }
+    }
+
+    /* List view mode */
+    #folders-grid.list-mode {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    #folders-grid.list-mode .folder-item {
+      flex-direction: row;
+      gap: 8px;
+      padding: 4px 8px;
+      border-radius: 2px;
+    }
+    #folders-grid.list-mode .folder-icon-wrap {
+      width: 22px; height: 20px;
+      flex-shrink: 0;
+    }
+    #folders-grid.list-mode .folder-icon-wrap::after { display: none; }
+    #folders-grid.list-mode .folder-name {
+      text-align: left;
+      max-width: none;
+      margin-top: 0;
+    }
+
+    #images-grid.list-mode {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    #images-grid.list-mode .img-thumb-wrap {
+      aspect-ratio: unset;
+      height: 22px;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 2px 8px;
+    }
+    #images-grid.list-mode .img-thumb-wrap::before { display: none; }
+    #images-grid.list-mode .img-thumb {
+      width: 18px; height: 18px;
+      object-fit: cover;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    #images-grid.list-mode .img-list-name {
+      font-size: 11px;
+      color: #111;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .img-list-name { display: none; }
+    #images-grid.list-mode .img-list-name { display: block; }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     APP WINDOW
+     ============================================================ -->
+<div id="app">
+
+  <!-- TITLE BAR -->
+  <div id="titlebar">
+    <div id="titlebar-icon">
+      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="tiFolderBody" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fde070"/>
+            <stop offset="100%" stop-color="#d4900a"/>
+          </linearGradient>
+          <linearGradient id="tiFolderTab" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#e8c040"/>
+            <stop offset="100%" stop-color="#b87800"/>
+          </linearGradient>
+        </defs>
+        <rect x="1" y="5" width="16" height="11" rx="1" fill="url(#tiFolderBody)" stroke="#a87000" stroke-width="0.5"/>
+        <rect x="1" y="3" width="7" height="4" rx="1" fill="url(#tiFolderTab)" stroke="#a87000" stroke-width="0.5"/>
+        <rect x="2" y="6" width="14" height="2" fill="rgba(255,255,255,0.25)" rx="0.5"/>
+      </svg>
+    </div>
+    <span id="titlebar-title">Kezzbi's Commission Resources</span>
+    <div id="titlebar-controls">
+      <button class="ctrl-btn ctrl-min" aria-label="Minimize" tabindex="-1">&#x2013;</button>
+      <button class="ctrl-btn ctrl-max" aria-label="Maximize" tabindex="-1">&#x25A1;</button>
+      <button class="ctrl-btn ctrl-close" aria-label="Close" tabindex="-1">&#x2715;</button>
+    </div>
+  </div>
+
+  <!-- MENU BAR -->
+  <div id="menubar" role="menubar">
+    <div class="menu-item" tabindex="-1">File</div>
+    <div class="menu-item" tabindex="-1">Edit</div>
+    <div class="menu-item" id="menu-view" tabindex="0" role="menuitem" aria-haspopup="true">
+      View
+      <div class="menu-dropdown" role="menu">
+        <div class="dropdown-item" id="view-icons" role="menuitem">Large Icons</div>
+        <div class="dropdown-item" id="view-thumbs" role="menuitem">Thumbnails</div>
+        <div class="dropdown-item" id="view-list" role="menuitem">List</div>
+        <div class="dropdown-sep"></div>
+        <div class="dropdown-item" id="view-refresh" role="menuitem">Refresh</div>
+      </div>
+    </div>
+    <div class="menu-item" tabindex="-1">Favorites</div>
+    <div class="menu-item" tabindex="-1">Tools</div>
+    <div class="menu-item" tabindex="-1">Help</div>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div id="toolbar">
+    <button class="tb-btn" id="btn-back" disabled aria-label="Back">
+      <svg viewBox="0 0 22 22" fill="none">
+        <defs>
+          <linearGradient id="arrowGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#4b8dd6"/>
+            <stop offset="100%" stop-color="#1853a3"/>
+          </linearGradient>
+        </defs>
+        <circle cx="11" cy="11" r="9" fill="url(#arrowGrad)" stroke="#0a3080" stroke-width="0.5"/>
+        <path d="M13 7l-5 4 5 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="tb-label">Back</span>
+    </button>
+    <button class="tb-btn" id="btn-fwd" disabled aria-label="Forward">
+      <svg viewBox="0 0 22 22" fill="none">
+        <circle cx="11" cy="11" r="9" fill="url(#arrowGrad)" stroke="#0a3080" stroke-width="0.5"/>
+        <path d="M9 7l5 4-5 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="tb-label">Forward</span>
+    </button>
+    <button class="tb-btn" id="btn-up" disabled aria-label="Up">
+      <svg viewBox="0 0 22 22" fill="none">
+        <circle cx="11" cy="11" r="9" fill="url(#arrowGrad)" stroke="#0a3080" stroke-width="0.5"/>
+        <path d="M11 15V7M7 11l4-4 4 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="tb-label">Up</span>
+    </button>
+    <div class="tb-sep"></div>
+    <button class="tb-btn" id="btn-sidebar-toggle" aria-label="Folders">
+      <svg viewBox="0 0 22 22" fill="none">
+        <rect x="2" y="5" width="18" height="13" rx="1" fill="#f9c634" stroke="#c88c00" stroke-width="1"/>
+        <rect x="2" y="3" width="8" height="4" rx="1" fill="#e6a800" stroke="#c88c00" stroke-width="1"/>
+        <line x1="2" y1="9" x2="20" y2="9" stroke="#a87000" stroke-width="0.5"/>
+      </svg>
+      <span class="tb-label">Folders</span>
+    </button>
+    <div id="view-btns">
+      <button class="view-btn active" id="vbtn-icons" title="Large Icons" aria-label="Large Icons">⊞</button>
+      <button class="view-btn" id="vbtn-list" title="List" aria-label="List">≡</button>
+    </div>
+  </div>
+
+  <!-- ADDRESS BAR -->
+  <div id="addrbar">
+    <span id="addrbar-label">Address</span>
+    <div id="addrbar-input-wrap">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <rect x="1" y="3" width="12" height="9" rx="0.8" fill="#f9c634" stroke="#c88c00" stroke-width="0.7"/>
+        <rect x="1" y="2" width="5.5" height="3" rx="0.8" fill="#e6a800" stroke="#c88c00" stroke-width="0.7"/>
+      </svg>
+      <span id="addrbar-path"><span>My Computer\Kezzbi's Commission Resources</span></span>
+    </div>
+    <button id="addrbar-go">Go</button>
+  </div>
+
+  <!-- MAIN: SIDEBAR + CONTENT -->
+  <div id="main">
+    <!-- FOLDER TREE SIDEBAR -->
+    <div id="sidebar">
+      <div id="sidebar-header">Folders</div>
+      <div id="folder-tree"></div>
+    </div>
+
+    <!-- CONTENT PANE (vertical flex for content + meta panel) -->
+    <div style="flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden;">
+      <div id="content">
+        <div id="content-loading">
+          <div class="spinner"></div>
+          <span>Loading...</span>
+        </div>
+      </div>
+      <div id="meta-panel"></div>
+    </div>
+  </div>
+
+  <!-- STATUS BAR -->
+  <div id="statusbar">
+    <div class="status-panel" id="status-count">0 objects</div>
+    <div class="status-panel" id="status-info"></div>
+  </div>
+
+</div><!-- /#app -->
+
+<!-- MOBILE SIDEBAR OVERLAY -->
+<div id="sidebar-mask"></div>
+
+<!-- ============================================================
+     LIGHTBOX
+     ============================================================ -->
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <div id="lb-bg"></div>
+  <div id="lb-inner">
+    <!-- Top bar -->
+    <div id="lb-topbar">
+      <button id="lb-close" aria-label="Close">&#x2715;</button>
+      <span id="lb-filename"></span>
+      <span id="lb-counter"></span>
+      <button class="lb-action-btn" id="lb-toggle-desc" title="Toggle description" aria-label="Toggle description">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <circle cx="8" cy="5" r="1.2"/><rect x="7" y="7.5" width="2" height="5" rx="0.8"/>
+          <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+      </button>
+      <button class="lb-action-btn" id="lb-download" title="Download image" aria-label="Download image">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8 2v7.5M5 7l3 3 3-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <path d="M2 12h12v1.5H2z" rx="0.5"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Image area -->
+    <div id="lb-image-area">
+      <button class="lb-nav" id="lb-prev" aria-label="Previous image">&#x2039;</button>
+      <div id="lb-image-container">
+        <img id="lb-image" src="" alt="" draggable="false">
+        <div id="lb-loading"><div class="spinner"></div></div>
+      </div>
+      <button class="lb-nav" id="lb-next" aria-label="Next image">&#x203A;</button>
+    </div>
+
+    <!-- Description bar -->
+    <div id="lb-descbar">
+      <div id="lb-desc-text"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+'use strict';
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const S = {
+  path: '/',
+  history: ['/'],
+  histIdx: 0,
+  data: null,        // { folders, images, metadata }
+  viewMode: 'icons', // 'icons' | 'list'
+  sidebar: false,    // mobile sidebar open
+  menuOpen: null,    // which menu is open
+
+  lb: {
+    open: false,
+    images: [],       // filenames
+    idx: 0,
+    basePath: '/',
+    metadata: null,
+    descVisible: true,
+    // pan/zoom
+    scale: 1,
+    tx: 0,
+    ty: 0,
+  },
+
+  tree: {},  // path -> { loaded, open, folders }
+};
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+function qs(sel, ctx = document)  { return ctx.querySelector(sel); }
+function qsa(sel, ctx = document) { return ctx.querySelectorAll(sel); }
+
+function el(tag, attrs = {}, ...children) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'class') e.className = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v);
+  }
+  for (const c of children) {
+    if (typeof c === 'string') e.appendChild(document.createTextNode(c));
+    else if (c) e.appendChild(c);
+  }
+  return e;
+}
+
+function folderSVG(size = 48) {
+  const id = 'fg' + (Math.random() * 1e9 | 0);
+  return `<svg width="${size}" height="${size * 0.875}" viewBox="0 0 48 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="${id}b" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#fde070"/>
+        <stop offset="60%" stop-color="#f9c634"/>
+        <stop offset="100%" stop-color="#d48800"/>
+      </linearGradient>
+      <linearGradient id="${id}t" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#eecc60"/>
+        <stop offset="100%" stop-color="#c89000"/>
+      </linearGradient>
+      <linearGradient id="${id}gl" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.5)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+      </linearGradient>
+    </defs>
+    <!-- shadow -->
+    <ellipse cx="24" cy="41" rx="20" ry="2.5" fill="rgba(0,0,0,0.18)"/>
+    <!-- body -->
+    <rect x="2" y="10" width="44" height="29" rx="2" fill="url(#${id}b)" stroke="#b87800" stroke-width="0.8"/>
+    <!-- tab -->
+    <rect x="2" y="6" width="18" height="7" rx="1.5" fill="url(#${id}t)" stroke="#b87800" stroke-width="0.8"/>
+    <!-- gloss highlight -->
+    <rect x="3" y="11" width="42" height="10" rx="1.5" fill="url(#${id}gl)" opacity="0.7"/>
+    <!-- lines (paper inside) -->
+    <line x1="10" y1="22" x2="38" y2="22" stroke="rgba(180,130,0,0.3)" stroke-width="0.8"/>
+    <line x1="10" y1="26" x2="38" y2="26" stroke="rgba(180,130,0,0.2)" stroke-width="0.8"/>
+    <line x1="10" y1="30" x2="30" y2="30" stroke="rgba(180,130,0,0.2)" stroke-width="0.8"/>
+  </svg>`;
+}
+
+function folderSVGSmall() {
+  return `<svg width="16" height="14" viewBox="0 0 16 14" fill="none">
+    <rect x="0.5" y="3.5" width="15" height="9.5" rx="1" fill="#f9c634" stroke="#c88c00" stroke-width="0.8"/>
+    <rect x="0.5" y="1.5" width="6" height="4" rx="1" fill="#e6a800" stroke="#c88c00" stroke-width="0.8"/>
+    <rect x="1" y="4" width="14" height="3" fill="rgba(255,255,255,0.3)" rx="0.5"/>
+  </svg>`;
+}
+
+/* ============================================================
+   API
+   ============================================================ */
+async function fetchDir(path) {
+  const url = `/api/list?path=${encodeURIComponent(path)}`;
+  const r = await fetch(url);
+  if (!r.ok) throw new Error('Failed to load ' + path);
+  return r.json();
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+async function navigate(path, addHistory = true) {
+  path = normalizePath(path);
+
+  // Validate not going above root
+  if (!path.startsWith('/')) path = '/' + path;
+
+  try {
+    showLoading();
+    const data = await fetchDir(path);
+    S.data = data;
+    S.path = path;
+
+    if (addHistory) {
+      S.history = S.history.slice(0, S.histIdx + 1);
+      if (S.history[S.histIdx] !== path) {
+        S.history.push(path);
+        S.histIdx = S.history.length - 1;
+      }
+    }
+
+    renderAll();
+    closeSidebar();
+  } catch (e) {
+    showError('Could not load folder: ' + e.message);
+  }
+}
+
+function normalizePath(p) {
+  // Normalize to unix-style, ensure starts with /
+  p = '/' + p.replace(/\\/g, '/').replace(/\/+/g, '/').replace(/^\//, '');
+  return p || '/';
+}
+
+function navBack() {
+  if (S.histIdx > 0) {
+    S.histIdx--;
+    navigate(S.history[S.histIdx], false);
+  }
+}
+
+function navFwd() {
+  if (S.histIdx < S.history.length - 1) {
+    S.histIdx++;
+    navigate(S.history[S.histIdx], false);
+  }
+}
+
+function navUp() {
+  const parts = S.path.replace(/\/$/, '').split('/').filter(Boolean);
+  if (parts.length > 0) {
+    parts.pop();
+    navigate('/' + parts.join('/'));
+  }
+}
+
+function pathToDisplay(p) {
+  const parts = p.replace(/^\//, '').split('/').filter(Boolean);
+  return 'My Computer\\Kezzbi\'s Commission Resources' +
+    (parts.length ? '\\' + parts.join('\\') : '');
+}
+
+/* ============================================================
+   METADATA HELPERS
+   ============================================================ */
+function getImageDesc(metadata, filename) {
+  if (!metadata) return '';
+
+  // Recursively search an object for a key matching `target` (case-insensitive)
+  // Returns the Description string if found, else null
+  function search(obj, target) {
+    if (!obj || typeof obj !== 'object') return null;
+    for (const [k, v] of Object.entries(obj)) {
+      if (k.toLowerCase() === target.toLowerCase()) {
+        if (typeof v === 'string') return v;
+        if (v && typeof v.Description === 'string') return v.Description;
+      }
+      // Recurse into nested objects (handles malformed metadata like background/)
+      if (v && typeof v === 'object') {
+        const found = search(v, target);
+        if (found !== null) return found;
+      }
+    }
+    return null;
+  }
+
+  const root = metadata.files || metadata;
+  return search(root, filename) || '';
+}
+
+function getFolderMeta(metadata) {
+  if (!metadata) return null;
+  const fields = [];
+  const descFields = new Set(['description', 'folder description', 'desc']);
+  let desc = '';
+
+  function collectFields(obj, isFilesObj) {
+    for (const [k, v] of Object.entries(obj)) {
+      const kl = k.toLowerCase();
+      // Skip the files sub-object at top level — but recurse into it to find Folder Description
+      if (kl === 'files' && typeof v === 'object' && v !== null) {
+        collectFields(v, true);
+        continue;
+      }
+      if (typeof v !== 'string' && typeof v !== 'number') continue;
+      if (descFields.has(kl)) {
+        if (!desc) desc = String(v); // first match wins
+      } else if (!isFilesObj) {
+        // Only show non-files-object keys as info fields
+        fields.push({ key: k, val: String(v) });
+      }
+    }
+  }
+
+  collectFields(metadata, false);
+  return { fields, desc };
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+function renderAll() {
+  renderAddrBar();
+  renderNavBtns();
+  renderContent();
+  updateTreeActive();
+  lazyLoadTree();
+}
+
+function showLoading() {
+  qs('#content').innerHTML = `<div id="content-loading"><div class="spinner"></div><span>Loading...</span></div>`;
+  qs('#meta-panel').className = '';
+  qs('#meta-panel').innerHTML = '';
+  qs('#status-count').textContent = '...';
+  qs('#status-info').textContent = '';
+}
+
+function showError(msg) {
+  qs('#content').innerHTML = `<div class="empty-state" style="color:#c00">⚠ ${msg}</div>`;
+}
+
+function renderAddrBar() {
+  const display = pathToDisplay(S.path);
+  qs('#addrbar-path').innerHTML = `<span>${display}</span>`;
+}
+
+function renderNavBtns() {
+  qs('#btn-back').disabled = S.histIdx <= 0;
+  qs('#btn-fwd').disabled  = S.histIdx >= S.history.length - 1;
+  const parts = S.path.replace(/\/$/, '').split('/').filter(Boolean);
+  qs('#btn-up').disabled = parts.length === 0;
+}
+
+function renderContent() {
+  const { folders = [], images = [], metadata = null } = S.data || {};
+  const content = qs('#content');
+  content.innerHTML = '';
+
+  const listMode = S.viewMode === 'list';
+
+  let totalItems = folders.length + images.length;
+
+  // ---- FOLDERS SECTION ----
+  if (folders.length > 0) {
+    if (images.length > 0) {
+      const lbl = el('div', { class: 'section-label' });
+      lbl.innerHTML = folderSVGSmall() + ' Folders';
+      content.appendChild(lbl);
+    }
+
+    const grid = el('div', { id: 'folders-grid', class: listMode ? 'list-mode' : '' });
+    for (const fname of folders) {
+      const item = el('div', {
+        class: 'folder-item',
+        role: 'button',
+        tabindex: '0',
+        'aria-label': fname,
+        ondblclick: () => navigate(S.path.replace(/\/$/, '') + '/' + fname),
+        onclick:     () => navigate(S.path.replace(/\/$/, '') + '/' + fname),
+        onkeydown: (e) => { if (e.key === 'Enter' || e.key === ' ') navigate(S.path.replace(/\/$/, '') + '/' + fname); },
+      });
+      const wrap = el('div', { class: 'folder-icon-wrap' });
+      wrap.innerHTML = folderSVG(listMode ? 22 : 48);
+      item.appendChild(wrap);
+      item.appendChild(el('span', { class: 'folder-name' }, fname));
+      grid.appendChild(item);
+    }
+    content.appendChild(grid);
+  }
+
+  // ---- IMAGES SECTION ----
+  if (images.length > 0) {
+    if (folders.length > 0) {
+      const lbl = el('div', { class: 'section-label', style: 'margin-top:12px' });
+      lbl.innerHTML = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <rect x="1" y="1" width="14" height="14" rx="1.5" fill="#4b8dd6" stroke="#1853a3" stroke-width="0.8"/>
+        <rect x="3" y="3" width="10" height="10" rx="0.8" fill="#a6caf0"/>
+        <circle cx="6" cy="6" r="1.5" fill="#2168c7"/>
+        <path d="M2 12l4-4 3 3 2-2 3 3" stroke="#1853a3" stroke-width="1" fill="none" stroke-linejoin="round"/>
+      </svg> Images`;
+      content.appendChild(lbl);
+    }
+
+    const igrid = el('div', { id: 'images-grid', class: listMode ? 'list-mode' : '' });
+    for (let i = 0; i < images.length; i++) {
+      const fname = images[i];
+      const imgPath = (S.path === '/' ? '' : S.path) + '/' + encodeURIComponent(fname);
+
+      const wrap = el('div', {
+        class: 'img-thumb-wrap',
+        role: 'button',
+        tabindex: '0',
+        'aria-label': fname,
+        onclick: () => openLightbox(i),
+        onkeydown: (e) => { if (e.key === 'Enter' || e.key === ' ') openLightbox(i); },
+      });
+
+      const img = el('img', {
+        class: 'img-thumb',
+        src: imgPath,
+        alt: getImageDesc(metadata, fname) || fname,
+        loading: 'lazy',
+      });
+      wrap.appendChild(img);
+
+      // For list mode: show filename
+      const nameSpan = el('span', { class: 'img-list-name' }, fname);
+      wrap.appendChild(nameSpan);
+
+      igrid.appendChild(wrap);
+    }
+    content.appendChild(igrid);
+  }
+
+  if (folders.length === 0 && images.length === 0) {
+    content.appendChild(el('div', { class: 'empty-state' }, 'This folder is empty.'));
+  }
+
+  // ---- META PANEL ----
+  const metaPanel = qs('#meta-panel');
+  const fm = getFolderMeta(metadata);
+  if (fm && (fm.fields.length > 0 || fm.desc)) {
+    metaPanel.className = 'visible';
+    metaPanel.innerHTML = '';
+    if (fm.fields.length > 0) {
+      const grid = el('div', { class: 'meta-grid' });
+      for (const { key, val } of fm.fields) {
+        grid.appendChild(el('span', { class: 'meta-key' }, key + ':'));
+        grid.appendChild(el('span', { class: 'meta-val' }, val));
+      }
+      metaPanel.appendChild(grid);
+    }
+    if (fm.desc) {
+      const d = el('div', { class: 'meta-desc' });
+      d.textContent = fm.desc;
+      metaPanel.appendChild(d);
+    }
+  } else {
+    metaPanel.className = '';
+    metaPanel.innerHTML = '';
+  }
+
+  // ---- STATUS BAR ----
+  const obj = totalItems === 1 ? '1 object' : `${totalItems} objects`;
+  qs('#status-count').textContent = obj;
+  qs('#status-info').textContent = images.length > 0
+    ? `${images.length} image${images.length !== 1 ? 's' : ''}`
+    : '';
+}
+
+/* ============================================================
+   FOLDER TREE (SIDEBAR)
+   ============================================================ */
+async function initTree() {
+  const data = await fetchDir('/');
+  S.tree['/'] = { loaded: true, open: true, folders: data.folders };
+  renderTree();
+}
+
+function renderTree() {
+  const treeEl = qs('#folder-tree');
+  treeEl.innerHTML = '';
+
+  const rootNode = buildTreeNode('/', 'Kezzbi\'s Commission Resources', 0);
+  treeEl.appendChild(rootNode);
+}
+
+function buildTreeNode(path, label, depth) {
+  const node = el('div', { class: 'tree-node' });
+  const td = S.tree[path] || {};
+  const hasChildren = td.folders && td.folders.length > 0;
+  const isOpen = td.open;
+  const isActive = normalizePath(S.path) === normalizePath(path);
+
+  const row = el('div', {
+    class: 'tree-row' + (isActive ? ' active' : ''),
+    style: `padding-left: ${depth * 14 + 4}px`,
+  });
+
+  const toggle = el('span', { class: 'tree-toggle' });
+  if (hasChildren) {
+    toggle.textContent = isOpen ? '▼' : '▶';
+    toggle.style.cursor = 'pointer';
+    toggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleTreeNode(path);
+    });
+  } else if (td.loaded) {
+    toggle.textContent = '';
+  } else {
+    // May have children, show expand arrow
+    toggle.textContent = '▶';
+    toggle.style.cursor = 'pointer';
+    toggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleTreeNode(path);
+    });
+  }
+
+  row.appendChild(toggle);
+
+  const icon = el('span', { class: 'tree-icon' });
+  icon.innerHTML = folderSVGSmall();
+  row.appendChild(icon);
+
+  const lbl = el('span', { class: 'tree-label' }, label);
+  row.appendChild(lbl);
+
+  row.addEventListener('click', () => navigate(path));
+  node.appendChild(row);
+
+  // Children
+  if (hasChildren && isOpen) {
+    const children = el('div', { class: 'tree-children open' });
+    const pathBase = path.replace(/\/$/, '');
+    for (const f of td.folders) {
+      const childPath = pathBase + '/' + f;
+      children.appendChild(buildTreeNode(childPath, f, depth + 1));
+    }
+    node.appendChild(children);
+  }
+
+  return node;
+}
+
+async function toggleTreeNode(path) {
+  if (!S.tree[path]) S.tree[path] = {};
+  const td = S.tree[path];
+
+  if (!td.loaded) {
+    try {
+      const data = await fetchDir(path);
+      td.folders = data.folders;
+      td.loaded = true;
+      td.open = true;
+    } catch {
+      td.loaded = true;
+      td.folders = [];
+    }
+  } else {
+    td.open = !td.open;
+  }
+  renderTree();
+}
+
+function updateTreeActive() {
+  // Re-render tree to update active state
+  // Also ensure the path and its parents are loaded/open
+  renderTree();
+}
+
+async function lazyLoadTree() {
+  // Pre-load tree nodes for current path ancestors
+  const parts = S.path.split('/').filter(Boolean);
+  let p = '/';
+  const paths = [p];
+  for (const part of parts) {
+    p = p.replace(/\/$/, '') + '/' + part;
+    paths.push(p);
+  }
+
+  for (const pp of paths) {
+    if (!S.tree[pp] || !S.tree[pp].loaded) {
+      try {
+        const data = await fetchDir(pp);
+        if (!S.tree[pp]) S.tree[pp] = {};
+        S.tree[pp].folders = data.folders;
+        S.tree[pp].loaded = true;
+        S.tree[pp].open = true;
+      } catch { /* ignore */ }
+    } else {
+      if (!S.tree[pp].open) S.tree[pp].open = true;
+    }
+  }
+  renderTree();
+}
+
+/* ============================================================
+   LIGHTBOX
+   ============================================================ */
+function openLightbox(idx) {
+  const { images = [], metadata = null } = S.data || {};
+  if (!images.length) return;
+
+  S.lb.open = true;
+  S.lb.images = images;
+  S.lb.idx = Math.max(0, Math.min(idx, images.length - 1));
+  S.lb.basePath = S.path;
+  S.lb.metadata = metadata;
+  S.lb.descVisible = true;
+
+  resetLbTransform(false);
+  qs('#lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  lbSetImage(S.lb.idx);
+  setupLbGestures();
+}
+
+function closeLightbox() {
+  S.lb.open = false;
+  qs('#lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+  teardownLbGestures();
+}
+
+function lbSetImage(idx) {
+  const { images, basePath, metadata } = S.lb;
+  idx = Math.max(0, Math.min(idx, images.length - 1));
+  S.lb.idx = idx;
+
+  const fname = images[idx];
+  const src = (basePath === '/' ? '' : basePath) + '/' + encodeURIComponent(fname);
+
+  const imgEl = qs('#lb-image');
+  const loading = qs('#lb-loading');
+
+  imgEl.style.opacity = '0';
+  loading.style.display = 'flex';
+
+  resetLbTransform(false);
+
+  imgEl.onload = () => {
+    loading.style.display = 'none';
+    imgEl.style.transition = 'opacity 0.2s';
+    imgEl.style.opacity = '1';
+    setTimeout(() => { imgEl.style.transition = ''; }, 220);
+  };
+  imgEl.onerror = () => {
+    loading.style.display = 'none';
+    imgEl.style.opacity = '1';
+  };
+  imgEl.src = src;
+  imgEl.alt = fname;
+
+  qs('#lb-filename').textContent = fname;
+  qs('#lb-counter').textContent = `${idx + 1} / ${images.length}`;
+
+  // Description
+  const desc = getImageDesc(metadata, fname);
+  qs('#lb-desc-text').textContent = desc;
+
+  // Nav buttons
+  qs('#lb-prev').disabled = idx === 0;
+  qs('#lb-next').disabled = idx === images.length - 1;
+
+  // Show/hide desc bar based on descVisible AND whether there's content
+  applyDescVisible();
+}
+
+function lbNext() {
+  if (S.lb.idx < S.lb.images.length - 1) lbSetImage(S.lb.idx + 1);
+}
+
+function lbPrev() {
+  if (S.lb.idx > 0) lbSetImage(S.lb.idx - 1);
+}
+
+function applyDescVisible() {
+  const bar = qs('#lb-descbar');
+  if (S.lb.descVisible) {
+    bar.classList.remove('hidden');
+  } else {
+    bar.classList.add('hidden');
+  }
+}
+
+function lbDownload() {
+  const fname = S.lb.images[S.lb.idx];
+  const src = (S.lb.basePath === '/' ? '' : S.lb.basePath) + '/' + encodeURIComponent(fname);
+  const a = document.createElement('a');
+  a.href = src;
+  a.download = fname;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+/* ============================================================
+   PAN / ZOOM
+   ============================================================ */
+function resetLbTransform(animate = false) {
+  S.lb.scale = 1;
+  S.lb.tx = 0;
+  S.lb.ty = 0;
+  applyLbTransform(animate);
+}
+
+function applyLbTransform(animate = false) {
+  const imgEl = qs('#lb-image');
+  if (animate) {
+    imgEl.classList.add('animating');
+    setTimeout(() => imgEl.classList.remove('animating'), 260);
+  }
+  imgEl.style.transform = `translate(${S.lb.tx}px, ${S.lb.ty}px) scale(${S.lb.scale})`;
+}
+
+function lbZoomAt(px, py, newScale) {
+  newScale = Math.max(1, Math.min(8, newScale));
+  const ratio = newScale / S.lb.scale;
+  S.lb.tx = px * (1 - ratio) + S.lb.tx * ratio;
+  S.lb.ty = py * (1 - ratio) + S.lb.ty * ratio;
+  S.lb.scale = newScale;
+  // clamp pan
+  clampLbPan();
+  applyLbTransform();
+}
+
+function clampLbPan() {
+  if (S.lb.scale <= 1) {
+    S.lb.tx = 0;
+    S.lb.ty = 0;
+    return;
+  }
+  const container = qs('#lb-image-container');
+  const imgEl = qs('#lb-image');
+  const cw = container.clientWidth;
+  const ch = container.clientHeight;
+
+  // Rendered size of image before transform
+  const iw = imgEl.naturalWidth  || cw;
+  const ih = imgEl.naturalHeight || ch;
+  const containerAspect = cw / ch;
+  const imgAspect = iw / ih;
+
+  let rendW, rendH;
+  if (imgAspect > containerAspect) {
+    rendW = cw;
+    rendH = cw / imgAspect;
+  } else {
+    rendH = ch;
+    rendW = ch * imgAspect;
+  }
+
+  const scaledW = rendW * S.lb.scale;
+  const scaledH = rendH * S.lb.scale;
+
+  const maxTx = Math.max(0, (scaledW - cw) / 2);
+  const maxTy = Math.max(0, (scaledH - ch) / 2);
+
+  S.lb.tx = Math.max(-maxTx, Math.min(maxTx, S.lb.tx));
+  S.lb.ty = Math.max(-maxTy, Math.min(maxTy, S.lb.ty));
+}
+
+/* ============================================================
+   GESTURE HANDLING (lightbox)
+   ============================================================ */
+let _lbGestureActive = false;
+let _pointerCache = [];
+let _lastPinchDist = null;
+let _dragStart = null;
+let _swipeStart = null;
+let _lastPos = null;
+let _didPan = false;
+let _tapTimer = null;
+let _lastTap = 0;
+
+function setupLbGestures() {
+  if (_lbGestureActive) return;
+  _lbGestureActive = true;
+  const c = qs('#lb-image-container');
+  c.addEventListener('pointerdown',  onLbPointerDown,  { passive: false });
+  c.addEventListener('pointermove',  onLbPointerMove,  { passive: false });
+  c.addEventListener('pointerup',    onLbPointerUp,    { passive: false });
+  c.addEventListener('pointercancel',onLbPointerUp,    { passive: false });
+  c.addEventListener('wheel',        onLbWheel,        { passive: false });
+}
+
+function teardownLbGestures() {
+  _lbGestureActive = false;
+  const c = qs('#lb-image-container');
+  c.removeEventListener('pointerdown',  onLbPointerDown);
+  c.removeEventListener('pointermove',  onLbPointerMove);
+  c.removeEventListener('pointerup',    onLbPointerUp);
+  c.removeEventListener('pointercancel',onLbPointerUp);
+  c.removeEventListener('wheel',        onLbWheel);
+  _pointerCache = [];
+  _lastPinchDist = null;
+  _dragStart = null;
+  _swipeStart = null;
+  _lastPos = null;
+}
+
+function getPointerIndex(e) {
+  return _pointerCache.findIndex(p => p.pointerId === e.pointerId);
+}
+
+function onLbPointerDown(e) {
+  e.preventDefault();
+  const idx = getPointerIndex(e);
+  if (idx === -1) _pointerCache.push(e);
+  else _pointerCache[idx] = e;
+
+  if (_pointerCache.length === 1) {
+    _dragStart = { x: e.clientX, y: e.clientY, tx: S.lb.tx, ty: S.lb.ty };
+    _lastPos   = { x: e.clientX, y: e.clientY };
+    _swipeStart = { x: e.clientX, y: e.clientY };
+    _didPan = false;
+  } else if (_pointerCache.length === 2) {
+    _lastPinchDist = getPinchDist();
+    _dragStart = null;
+  }
+}
+
+function onLbPointerMove(e) {
+  e.preventDefault();
+  const idx = getPointerIndex(e);
+  if (idx === -1) return;
+  _pointerCache[idx] = e;
+
+  if (_pointerCache.length === 2 && _lastPinchDist !== null) {
+    // PINCH ZOOM
+    const dist = getPinchDist();
+    const scale = S.lb.scale * (dist / _lastPinchDist);
+    _lastPinchDist = dist;
+    const cx = (_pointerCache[0].clientX + _pointerCache[1].clientX) / 2;
+    const cy = (_pointerCache[0].clientY + _pointerCache[1].clientY) / 2;
+    const cont = qs('#lb-image-container').getBoundingClientRect();
+    lbZoomAt(cx - cont.left - cont.width / 2, cy - cont.top - cont.height / 2, scale);
+  } else if (_pointerCache.length === 1 && _dragStart) {
+    const dx = e.clientX - _lastPos.x;
+    const dy = e.clientY - _lastPos.y;
+    _lastPos = { x: e.clientX, y: e.clientY };
+
+    if (S.lb.scale > 1) {
+      S.lb.tx = _dragStart.tx + (e.clientX - _dragStart.x);
+      S.lb.ty = _dragStart.ty + (e.clientY - _dragStart.y);
+      clampLbPan();
+      applyLbTransform();
+      _didPan = true;
+    }
+    if (Math.abs(e.clientX - _swipeStart.x) > 8) _didPan = true;
+  }
+}
+
+function onLbPointerUp(e) {
+  e.preventDefault();
+  const idx = getPointerIndex(e);
+  if (idx !== -1) _pointerCache.splice(idx, 1);
+  _lastPinchDist = null;
+
+  if (_pointerCache.length === 0 && _swipeStart) {
+    const dx = e.clientX - _swipeStart.x;
+    const dy = e.clientY - _swipeStart.y;
+    const now = Date.now();
+
+    if (!_didPan && Math.abs(dx) < 10 && Math.abs(dy) < 10) {
+      // Tap — check double tap
+      if (now - _lastTap < 300) {
+        // Double tap: toggle zoom
+        if (S.lb.scale > 1) {
+          resetLbTransform(true);
+        } else {
+          const cont = qs('#lb-image-container').getBoundingClientRect();
+          lbZoomAt(e.clientX - cont.left - cont.width / 2,
+                   e.clientY - cont.top - cont.height / 2, 2.5);
+        }
+        _lastTap = 0;
+      } else {
+        _lastTap = now;
+      }
+    } else if (!_didPan || (S.lb.scale <= 1 && Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy))) {
+      // Swipe to navigate
+      if (dx > 50)  lbPrev();
+      else if (dx < -50) lbNext();
+    }
+
+    _dragStart = null;
+    _swipeStart = null;
+  }
+}
+
+function onLbWheel(e) {
+  e.preventDefault();
+  const cont = qs('#lb-image-container').getBoundingClientRect();
+  const cx = e.clientX - cont.left - cont.width / 2;
+  const cy = e.clientY - cont.top - cont.height / 2;
+  const delta = e.deltaY > 0 ? 0.85 : 1.15;
+  lbZoomAt(cx, cy, S.lb.scale * delta);
+}
+
+function getPinchDist() {
+  const [a, b] = _pointerCache;
+  return Math.hypot(b.clientX - a.clientX, b.clientY - a.clientY);
+}
+
+/* ============================================================
+   SIDEBAR (MOBILE)
+   ============================================================ */
+function openSidebar() {
+  S.sidebar = true;
+  qs('#sidebar').classList.add('open');
+  qs('#sidebar-mask').classList.add('visible');
+}
+
+function closeSidebar() {
+  S.sidebar = false;
+  qs('#sidebar').classList.remove('open');
+  qs('#sidebar-mask').classList.remove('visible');
+}
+
+/* ============================================================
+   VIEW MODE
+   ============================================================ */
+function setViewMode(mode) {
+  S.viewMode = mode;
+  qs('#vbtn-icons').classList.toggle('active', mode === 'icons');
+  qs('#vbtn-list').classList.toggle('active',  mode === 'list');
+  qs('#view-icons').classList.toggle('checked', mode === 'icons');
+  qs('#view-list').classList.toggle('checked',  mode === 'list');
+  if (S.data) renderContent();
+}
+
+/* ============================================================
+   MENU HANDLING
+   ============================================================ */
+function toggleMenu(id) {
+  const item = qs('#' + id);
+  if (!item) return;
+  const isOpen = item.getAttribute('data-active') === 'true';
+  // Close all
+  qsa('.menu-item').forEach(m => m.removeAttribute('data-active'));
+  if (!isOpen) item.setAttribute('data-active', 'true');
+  S.menuOpen = isOpen ? null : id;
+}
+
+/* ============================================================
+   EVENT WIRING
+   ============================================================ */
+function initEvents() {
+  // Toolbar
+  qs('#btn-back').addEventListener('click', navBack);
+  qs('#btn-fwd').addEventListener('click', navFwd);
+  qs('#btn-up').addEventListener('click', navUp);
+  qs('#btn-sidebar-toggle').addEventListener('click', () => {
+    S.sidebar ? closeSidebar() : openSidebar();
+  });
+
+  // View buttons
+  qs('#vbtn-icons').addEventListener('click', () => setViewMode('icons'));
+  qs('#vbtn-list').addEventListener('click',  () => setViewMode('list'));
+
+  // Address bar
+  qs('#addrbar-go').addEventListener('click', () => navigate(S.path));
+
+  // Menu bar
+  qs('#menu-view').addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleMenu('menu-view');
+  });
+  qs('#view-icons').addEventListener('click', () => { setViewMode('icons'); closeMenus(); });
+  qs('#view-thumbs').addEventListener('click', () => { setViewMode('icons'); closeMenus(); });
+  qs('#view-list').addEventListener('click',  () => { setViewMode('list');  closeMenus(); });
+  qs('#view-refresh').addEventListener('click', () => { navigate(S.path, false); closeMenus(); });
+
+  // Close menus on outside click
+  document.addEventListener('click', () => closeMenus());
+
+  // Sidebar mobile mask
+  qs('#sidebar-mask').addEventListener('click', closeSidebar);
+
+  // Lightbox controls
+  qs('#lb-close').addEventListener('click', closeLightbox);
+  qs('#lb-prev').addEventListener('click',  lbPrev);
+  qs('#lb-next').addEventListener('click',  lbNext);
+  qs('#lb-toggle-desc').addEventListener('click', () => {
+    S.lb.descVisible = !S.lb.descVisible;
+    applyDescVisible();
+    const btn = qs('#lb-toggle-desc');
+    btn.style.background = S.lb.descVisible
+      ? 'rgba(40,100,255,0.7)'
+      : 'rgba(20,60,180,0.5)';
+  });
+  qs('#lb-download').addEventListener('click', lbDownload);
+  qs('#lb-bg').addEventListener('click', closeLightbox);
+
+  // Keyboard
+  document.addEventListener('keydown', (e) => {
+    if (S.lb.open) {
+      if (e.key === 'Escape')      { e.preventDefault(); closeLightbox(); }
+      if (e.key === 'ArrowRight')  { e.preventDefault(); lbNext(); }
+      if (e.key === 'ArrowLeft')   { e.preventDefault(); lbPrev(); }
+      if (e.key === 'ArrowUp')     { e.preventDefault(); resetLbTransform(true); }
+      if (e.key === '+' || e.key === '=') { e.preventDefault(); lbZoomAt(0, 0, S.lb.scale * 1.25); }
+      if (e.key === '-')           { e.preventDefault(); lbZoomAt(0, 0, S.lb.scale * 0.8); }
+    } else {
+      if (e.key === 'Backspace' && !e.target.matches('input,textarea')) {
+        e.preventDefault(); navBack();
+      }
+    }
+  });
+
+  // Back/forward mouse buttons
+  document.addEventListener('mousedown', (e) => {
+    if (e.button === 3) { e.preventDefault(); navBack(); }
+    if (e.button === 4) { e.preventDefault(); navFwd(); }
+  });
+}
+
+function closeMenus() {
+  qsa('.menu-item').forEach(m => m.removeAttribute('data-active'));
+  S.menuOpen = null;
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+async function init() {
+  initEvents();
+  await initTree();
+  await navigate('/');
+}
+
+init().catch(console.error);
+</script>
+</body>
+</html>

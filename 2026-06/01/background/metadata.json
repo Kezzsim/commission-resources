@@ -1,0 +1,29 @@
+{
+    "files": {
+        "car1.JPG": {
+            "Description": "Alabaster silver FA5 Honda Civic, 2011 model"
+        },
+        "car2.jpg": {
+            "Description": "Alabaster silver FA5 Honda Civic, 2011 model Side Profile with a little spoiler"
+        },
+        "Car3.jpg": {
+            "Description": "Alabaster silver FA5 Honda Civic, 2011 model close up from the front"
+        },
+        "motorcycle1.jpg": {
+            "Description": "Blue Suzuki GSX 8R product shot on a side stand straight up"
+        },
+        "motorcycle2.jpg": {
+            "Description": "Blue Suzuki GSX 8R with a rider on a track day"
+        },
+        "motorcycle3.jpg": {
+            "Description": "Blue Suzuki GSX 8R side profile"
+        },
+        "tracksuit.jpg": {
+            "Description": "Grey Sparco tracksuit, which both characters should be wearing."
+        },
+        "helmet.jpg": {
+            "Description": "Grey Arai helmet which both characters should have under one of their arms."
+        }
+    },
+    "Folder Description": "Background objects and assets to appear in commissioned artwork scene"
+}
