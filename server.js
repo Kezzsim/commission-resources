@@ -64,17 +64,22 @@ app.get('/api/list', (req, res) => {
   res.json({ folders, images, metadata });
 });
 
-// Serve static files (images etc.) — index.html explicitly
-app.get('/', (req, res) => {
-  res.sendFile(path.join(ROOT, 'index.html'));
-});
-
+// Serve static files (images etc.)
 app.use(express.static(ROOT, {
-  // Don't auto-serve index.html for directories
   index: false,
-  // Don't list directories
   dotfiles: 'ignore',
 }));
+
+// SPA catch-all: serve index.html for any path that isn't a real file.
+// This allows direct navigation to e.g. /2026-06/01/ref_sheets
+app.get('*', (req, res) => {
+  const ext = path.extname(req.path);
+  if (!ext || ext === '.html') {
+    res.sendFile(path.join(ROOT, 'index.html'));
+  } else {
+    res.status(404).send('Not found');
+  }
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

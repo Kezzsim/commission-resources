@@ -1405,9 +1405,6 @@ async function fetchDir(path) {
 async function navigate(path, addHistory = true) {
   path = normalizePath(path);
 
-  // Validate not going above root
-  if (!path.startsWith('/')) path = '/' + path;
-
   try {
     showLoading();
     const data = await fetchDir(path);
@@ -1420,6 +1417,8 @@ async function navigate(path, addHistory = true) {
         S.history.push(path);
         S.histIdx = S.history.length - 1;
       }
+      // Keep the browser URL in sync so the path is bookmarkable / shareable
+      window.history.pushState({ path }, '', path);
     }
 
     renderAll();
@@ -1436,17 +1435,12 @@ function normalizePath(p) {
 }
 
 function navBack() {
-  if (S.histIdx > 0) {
-    S.histIdx--;
-    navigate(S.history[S.histIdx], false);
-  }
+  // Delegate to the browser — popstate handler will call navigate
+  window.history.back();
 }
 
 function navFwd() {
-  if (S.histIdx < S.history.length - 1) {
-    S.histIdx++;
-    navigate(S.history[S.histIdx], false);
-  }
+  window.history.forward();
 }
 
 function navUp() {
@@ -2230,8 +2224,19 @@ function closeMenus() {
    ============================================================ */
 async function init() {
   initEvents();
+
+  // Handle browser back/forward — navigate without re-pushing to history
+  window.addEventListener('popstate', (e) => {
+    const path = (e.state && e.state.path) || window.location.pathname;
+    navigate(path, false);
+  });
+
   await initTree();
-  await navigate('/');
+
+  // Boot to whatever path the browser is currently at (supports direct deep links)
+  const initialPath = normalizePath(window.location.pathname);
+  window.history.replaceState({ path: initialPath }, '', initialPath);
+  await navigate(initialPath, false);
 }
 
 init().catch(console.error);
