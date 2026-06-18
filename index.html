@@ -7,9 +7,9 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#1e5fb4">
-  <!-- Base href: change to /repo-name/ for GitHub Pages project sites,
-       or leave as / for custom domains and user/org pages. -->
-  <base href="/">
+  <!-- Base href: must match the GitHub Pages deployment subdirectory.
+       Use /repo-name/ for project pages, or / for custom domains / user pages. -->
+  <base href="/commission-resources/">
   <title>Kezzbi's Commission Resources</title>
   <style>
     /* =====================================================
@@ -1663,7 +1663,7 @@ async function fetchDir(path) {
    whether deployed at / (custom domain) or /repo/ (GitHub Pages project).
    ============================================================ */
 function getBasePath() {
-  // e.g. <base href="/comissionsite/"> → '/comissionsite'
+  // e.g. <base href="/commission-resources/"> → '/commission-resources'
   //      <base href="/">              → ''
   const base = document.querySelector('base');
   if (!base) return '';
@@ -2525,7 +2525,7 @@ async function init() {
 
 // Extract the SPA-logical path from window.location by stripping the base prefix.
 function logicalPath() {
-  const base = getBasePath(); // e.g. '/comissionsite' or ''
+  const base = getBasePath(); // e.g. '/commission-resources' or ''
   const full = window.location.pathname;
   return full.startsWith(base) ? normalizePath(full.slice(base.length)) : '/';
 }
