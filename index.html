@@ -1112,6 +1112,168 @@
     }
     .img-list-name { display: none; }
     #images-grid.list-mode .img-list-name { display: block; }
+
+    /* =====================================================
+       USER PANEL — XP "logged in user" banner
+       ===================================================== */
+    #user-panel {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      padding: 5px 10px;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(to right,
+          rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 18%,
+          rgba(255,255,255,0) 70%, rgba(255,255,255,0.08) 100%),
+        linear-gradient(180deg,
+          #1260b8 0%, #1a5cb0 30%, #2270cb 60%, #1a5cb0 100%);
+      border-bottom: 1px solid #0a3080;
+    }
+    /* Gloss overlay */
+    #user-panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg,
+        rgba(255,255,255,0.28) 0%,
+        rgba(255,255,255,0.08) 48%,
+        rgba(255,255,255,0)    49%,
+        rgba(255,255,255,0.04) 100%);
+      pointer-events: none;
+    }
+    /* Subtle animated sparkle sweep */
+    #user-panel::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0; width: 25%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      animation: shimmerSweep 8s ease-in-out infinite 2s;
+      pointer-events: none;
+    }
+
+    #user-avatar-frame {
+      width: 42px;
+      height: 42px;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+      border-radius: 4px;
+      overflow: hidden;
+      /* XP-style picture frame: white border + deep shadow */
+      border: 2px solid rgba(255,255,255,0.7);
+      box-shadow:
+        0 0 0 1px rgba(0,0,80,0.4),
+        0 2px 8px rgba(0,0,0,0.55),
+        inset 0 1px 0 rgba(255,255,255,0.5);
+      background: #1853a3;
+    }
+    #user-avatar-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    #user-info {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+    #user-name {
+      color: white;
+      font-weight: bold;
+      font-size: 13px;
+      text-shadow: 1px 1px 3px rgba(0,0,40,0.8);
+      white-space: nowrap;
+      letter-spacing: 0.3px;
+    }
+
+    /* ---- Blingee tagline ---- */
+    @keyframes rainbowShift {
+      0%   { background-position: 0%   50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0%   50%; }
+    }
+    @keyframes starPulse {
+      0%, 100% { opacity: 1;   transform: scale(1)   rotate(0deg);   }
+      25%      { opacity: 0.5; transform: scale(0.7) rotate(90deg);  }
+      50%      { opacity: 1;   transform: scale(1.3) rotate(180deg); }
+      75%      { opacity: 0.6; transform: scale(0.8) rotate(270deg); }
+    }
+    @keyframes heartBeat {
+      0%, 100% { transform: scale(1);   }
+      15%      { transform: scale(1.3); }
+      30%      { transform: scale(1);   }
+      45%      { transform: scale(1.2); }
+      60%      { transform: scale(1);   }
+    }
+
+    #user-tagline {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      white-space: nowrap;
+    }
+    .blingee-text {
+      font-size: 11px;
+      font-weight: bold;
+      background: linear-gradient(90deg,
+        #ff88cc, #ffcc00, #88ffcc, #88ccff, #ff88ff, #ffaa44, #ff88cc);
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: rainbowShift 2.8s ease infinite;
+      letter-spacing: 0.4px;
+    }
+    .bling-star {
+      font-size: 10px;
+      display: inline-block;
+      color: #ffcc44;
+      filter: drop-shadow(0 0 3px #ff88ff);
+      animation: starPulse 1.8s ease-in-out infinite;
+    }
+    .bling-star:nth-child(2) { animation-delay: 0.6s; color: #88ffcc; filter: drop-shadow(0 0 3px #88aaff); }
+    .bling-star:nth-child(4) { animation-delay: 1.2s; color: #ff88cc; filter: drop-shadow(0 0 3px #ffcc44); }
+    .bling-heart {
+      font-size: 12px;
+      display: inline-block;
+      color: #ff4488;
+      filter: drop-shadow(0 0 4px #ff88aa);
+      animation: heartBeat 1.4s ease-in-out infinite;
+    }
+
+    /* Mobile: shrink panel a touch */
+    @media (max-width: 680px) {
+      #user-avatar-frame { width: 34px; height: 34px; }
+      #user-name { font-size: 12px; }
+      .blingee-text { font-size: 10px; }
+    }
+
+    /* =====================================================
+       2007 LOL MENU DROPDOWNS — extra spicy items
+       ===================================================== */
+    .dropdown-item-lol {
+      padding: 4px 28px 4px 24px;
+      cursor: default;
+      font-size: 11px;
+      position: relative;
+    }
+    .dropdown-item-lol:hover {
+      background: var(--xp-sel-bg);
+      color: var(--xp-blue-mid);
+    }
+    .dropdown-item-lol .lol-icon {
+      position: absolute;
+      left: 6px;
+      font-size: 10px;
+    }
   </style>
 </head>
 <body>
@@ -1150,8 +1312,33 @@
 
   <!-- MENU BAR -->
   <div id="menubar" role="menubar">
-    <div class="menu-item" tabindex="-1">File</div>
-    <div class="menu-item" tabindex="-1">Edit</div>
+    <div class="menu-item" id="menu-file" tabindex="0" role="menuitem" aria-haspopup="true">
+      File
+      <div class="menu-dropdown" role="menu">
+        <div class="dropdown-item-lol" role="menuitem"><span class="lol-icon">📄</span>New (lol)</div>
+        <div class="dropdown-item-lol" role="menuitem"><span class="lol-icon">📂</span>Open... (rawr~)</div>
+        <div class="dropdown-sep"></div>
+        <div class="dropdown-item-lol" role="menuitem"><span class="lol-icon">💾</span>Save (omgz)</div>
+        <div class="dropdown-item-lol" role="menuitem"><span class="lol-icon">💾</span>Save As... (zomg!)</div>
+        <div class="dropdown-sep"></div>
+        <div class="dropdown-item-lol" role="menuitem"><span class="lol-icon">🖨️</span>Print (XD)</div>
+        <div class="dropdown-sep"></div>
+        <div class="dropdown-item-lol" role="menuitem"><span class="lol-icon">😭</span>Close (;__;)</div>
+      </div>
+    </div>
+    <div class="menu-item" id="menu-edit" tabindex="0" role="menuitem" aria-haspopup="true">
+      Edit
+      <div class="menu-dropdown" role="menu">
+        <div class="dropdown-item-lol" role="menuitem"><span class="lol-icon">↩️</span>Undo (T_T)</div>
+        <div class="dropdown-item-lol" role="menuitem"><span class="lol-icon">↪️</span>Redo :3</div>
+        <div class="dropdown-sep"></div>
+        <div class="dropdown-item-lol" role="menuitem"><span class="lol-icon">✂️</span>Cut (&gt;:3)</div>
+        <div class="dropdown-item-lol" role="menuitem"><span class="lol-icon">📋</span>Copy (glomp~)</div>
+        <div class="dropdown-item-lol" role="menuitem"><span class="lol-icon">📌</span>Paste (squee!)</div>
+        <div class="dropdown-sep"></div>
+        <div class="dropdown-item-lol" role="menuitem"><span class="lol-icon">✨</span>Select All (w00t!)</div>
+      </div>
+    </div>
     <div class="menu-item" id="menu-view" tabindex="0" role="menuitem" aria-haspopup="true">
       View
       <div class="menu-dropdown" role="menu">
@@ -1162,9 +1349,43 @@
         <div class="dropdown-item" id="view-refresh" role="menuitem">Refresh</div>
       </div>
     </div>
-    <div class="menu-item" tabindex="-1">Favorites</div>
-    <div class="menu-item" tabindex="-1">Tools</div>
-    <div class="menu-item" tabindex="-1">Help</div>
+    <div class="menu-item" id="menu-favs" tabindex="0" role="menuitem" aria-haspopup="true">
+      Favorites
+      <div class="menu-dropdown" role="menu">
+        <div class="dropdown-item-lol" role="menuitem"><span class="lol-icon">⭐</span>Add to Favz ♥</div>
+        <div class="dropdown-item-lol" role="menuitem"><span class="lol-icon">📁</span>Organize Favz~</div>
+        <div class="dropdown-sep"></div>
+        <div class="dropdown-item-lol" role="menuitem"><span class="lol-icon">🐾</span>Neopets.com</div>
+        <div class="dropdown-item-lol" role="menuitem"><span class="lol-icon">🎵</span>MySpace UwU</div>
+        <div class="dropdown-item-lol" role="menuitem"><span class="lol-icon">🎨</span>DeviantArt!!!</div>
+        <div class="dropdown-sep"></div>
+        <div class="dropdown-item-lol" role="menuitem"><span class="lol-icon">😂</span>oOf</div>
+      </div>
+    </div>
+    <div class="menu-item" id="menu-tools" tabindex="0" role="menuitem" aria-haspopup="true">
+      Tools
+      <div class="menu-dropdown" role="menu">
+        <div class="dropdown-item-lol" role="menuitem"><span class="lol-icon">🪟</span>Windows Update xD</div>
+        <div class="dropdown-sep"></div>
+        <div class="dropdown-item-lol" role="menuitem"><span class="lol-icon">🧩</span>Manage Add-onz (desu)</div>
+        <div class="dropdown-sep"></div>
+        <div class="dropdown-item-lol" role="menuitem"><span class="lol-icon">🛡️</span>Pop-up Blocker (pwned)</div>
+        <div class="dropdown-sep"></div>
+        <div class="dropdown-item-lol" role="menuitem"><span class="lol-icon">⚙️</span>Internet Optionz (lmao)</div>
+      </div>
+    </div>
+    <div class="menu-item" id="menu-help" tabindex="0" role="menuitem" aria-haspopup="true">
+      Help
+      <div class="menu-dropdown" role="menu">
+        <div class="dropdown-item-lol" role="menuitem"><span class="lol-icon">❓</span>Halp!! &gt;_&lt;</div>
+        <div class="dropdown-sep"></div>
+        <div class="dropdown-item-lol" role="menuitem"><span class="lol-icon">📬</span>Send Feedback (lulz)</div>
+        <div class="dropdown-sep"></div>
+        <div class="dropdown-item-lol" role="menuitem"><span class="lol-icon">🌐</span>About Internet Explorer XD</div>
+        <div class="dropdown-sep"></div>
+        <div class="dropdown-item-lol" role="menuitem"><span class="lol-icon">🔄</span>Did u try turning it off and on again??? ^_^</div>
+      </div>
+    </div>
   </div>
 
   <!-- TOOLBAR -->
@@ -1208,6 +1429,24 @@
     <div id="view-btns">
       <button class="view-btn active" id="vbtn-icons" title="Large Icons" aria-label="Large Icons">⊞</button>
       <button class="view-btn" id="vbtn-list" title="List" aria-label="List">≡</button>
+    </div>
+  </div>
+
+  <!-- ADDRESS BAR -->
+  <!-- USER PANEL — XP "logged in user" strip -->
+  <div id="user-panel">
+    <div id="user-avatar-frame">
+      <img src="resources/user_icon.png" alt="Kezzbi's avatar">
+    </div>
+    <div id="user-info">
+      <div id="user-name">Kezzbi</div>
+      <div id="user-tagline">
+        <span class="bling-star">✦</span>
+        <span class="blingee-text">Made with love</span>
+        <span class="bling-star">✦</span>
+        <span class="bling-heart">♥</span>
+        <span class="bling-star">✦</span>
+      </div>
     </div>
   </div>
 
@@ -1465,6 +1704,8 @@ async function navigate(path, addHistory = true) {
 function normalizePath(p) {
   // Normalize to unix-style, ensure starts with /
   p = '/' + p.replace(/\\/g, '/').replace(/\/+/g, '/').replace(/^\//, '');
+  // Strip trailing slash (except bare root) so manifest keys always match
+  if (p.length > 1 && p.endsWith('/')) p = p.slice(0, -1);
   return p || '/';
 }
 
@@ -2195,14 +2436,15 @@ function initEvents() {
   qs('#addrbar-go').addEventListener('click', () => navigate(S.path));
 
   // Menu bar
-  qs('#menu-view').addEventListener('click', (e) => {
-    e.stopPropagation();
-    toggleMenu('menu-view');
+  ['menu-file', 'menu-edit', 'menu-view', 'menu-favs', 'menu-tools', 'menu-help'].forEach(id => {
+    qs('#' + id).addEventListener('click', (e) => { e.stopPropagation(); toggleMenu(id); });
   });
   qs('#view-icons').addEventListener('click', () => { setViewMode('icons'); closeMenus(); });
   qs('#view-thumbs').addEventListener('click', () => { setViewMode('icons'); closeMenus(); });
   qs('#view-list').addEventListener('click',  () => { setViewMode('list');  closeMenus(); });
   qs('#view-refresh').addEventListener('click', () => { navigate(S.path, false); closeMenus(); });
+  // All lol-menu items just close the menu — they're decorative
+  qsa('.dropdown-item-lol').forEach(item => item.addEventListener('click', closeMenus));
 
   // Close menus on outside click
   document.addEventListener('click', () => closeMenus());

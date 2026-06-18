@@ -16,6 +16,7 @@ const ROOT_EXCLUDE = new Set([
   'package.json', 'package-lock.json',
   'server.js', 'build.js',
   'index.html', '404.html', 'manifest.json',
+  'resources',
 ]);
 
 const manifest = {};
